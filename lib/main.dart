@@ -1,3 +1,4 @@
+//Made by Skyler Plumley and Shawn
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -11,12 +12,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: "Valentine's Day",
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Valentines Day'),
+      home: const MyHomePage(title: "Valentine's Day"),
     );
   }
 }
@@ -93,11 +94,11 @@ class _MyHomePageState extends State<MyHomePage>
               children: [
                 ElevatedButton(
                     onPressed: () => sendmessage("You are my valentine!"),
-                    child: const Text("Send a Message")),
+                    child: const Text("Message 1")),
                 const SizedBox(width: 20),
                 ElevatedButton(
                     onPressed: () => sendmessage("XOXO!"),
-                    child: const Text("Send a Message")),
+                    child: const Text("Message 2")),
                 const SizedBox(width: 20),
               ],
             ),
@@ -126,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage>
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: Colors.pink,
               ),
             ),
           ],

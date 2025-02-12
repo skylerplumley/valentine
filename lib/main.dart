@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 void main() {
   runApp(const MyApp());
@@ -33,6 +34,9 @@ class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  bool beating = false;
+  Timer? _timer;
+  int seconds = 0;
 
   @override
   void initState() {
@@ -40,11 +44,30 @@ class _MyHomePageState extends State<MyHomePage>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 1),
-    )..repeat(reverse: true);
+    );
 
     _animation = Tween<double>(begin: 1, end: 1.4).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
+  }
+
+  void startbeat() {
+    setState(() {
+      if (beating) {
+        _controller.stop();
+        _timer?.cancel();
+      } else {
+        seconds = 0;
+        _controller.repeat(reverse: true);
+        _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+          setState(() {
+            seconds++;
+          });
+        });
+      }
+
+      beating = !beating;
+    });
   }
 
   @override
@@ -55,15 +78,29 @@ class _MyHomePageState extends State<MyHomePage>
         title: Text(widget.title),
       ),
       body: Center(
-        child: AnimatedBuilder(
-          animation: _animation,
-          builder: (context, child) {
-            return Transform.scale(
-              scale: _animation.value,
-              child: child,
-            );
-          },
-          child: Image.asset('assets/heartnew.png'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AnimatedBuilder(
+              animation: _animation,
+              builder: (context, child) {
+                return Transform.scale(
+                  scale: _animation.value,
+                  child: child,
+                );
+              },
+              child: Image.asset('assets/heartnew.png'),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Timer: $seconds',
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: startbeat,
+              child: Text(beating ? 'Stop' : 'Start'),
+            ),
+          ],
         ),
       ),
     );

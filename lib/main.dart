@@ -35,6 +35,7 @@ class _MyHomePageState extends State<MyHomePage>
   late AnimationController _controller;
   late Animation<double> _animation;
   bool beating = false;
+  String themessage = "";
   Timer? _timer;
   int seconds = 0;
 
@@ -70,6 +71,12 @@ class _MyHomePageState extends State<MyHomePage>
     });
   }
 
+  void sendmessage(String message) {
+    setState(() {
+      themessage = message;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,6 +88,20 @@ class _MyHomePageState extends State<MyHomePage>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    onPressed: () => sendmessage("You are my valentine!"),
+                    child: const Text("Send a Message")),
+                const SizedBox(width: 20),
+                ElevatedButton(
+                    onPressed: () => sendmessage("XOXO!"),
+                    child: const Text("Send a Message")),
+                const SizedBox(width: 20),
+              ],
+            ),
+            const SizedBox(height: 20),
             AnimatedBuilder(
               animation: _animation,
               builder: (context, child) {
@@ -99,6 +120,14 @@ class _MyHomePageState extends State<MyHomePage>
             ElevatedButton(
               onPressed: startbeat,
               child: Text(beating ? 'Stop' : 'Start'),
+            ),
+            Text(
+              themessage,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
             ),
           ],
         ),

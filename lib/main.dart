@@ -1,6 +1,7 @@
-//Made by Skyler Plumley and Shawn
+// Made by Skyler Plumley and Shawn
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:confetti/confetti.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,14 +32,16 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
+class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   bool beating = false;
   String themessage = "";
   Timer? _timer;
   int seconds = 0;
+
+  // Confetti controller
+  late ConfettiController _confettiController;
 
   @override
   void initState() {
@@ -51,6 +54,9 @@ class _MyHomePageState extends State<MyHomePage>
     _animation = Tween<double>(begin: 1, end: 1.4).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
+
+    // Initialize confetti controller
+    _confettiController = ConfettiController(duration: const Duration(seconds: 10));
   }
 
   void startbeat() {
@@ -76,6 +82,16 @@ class _MyHomePageState extends State<MyHomePage>
     setState(() {
       themessage = message;
     });
+
+    // Trigger confetti animation when message is sent
+    _confettiController.play();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _confettiController.dispose();
+    super.dispose();
   }
 
   @override
@@ -89,20 +105,7 @@ class _MyHomePageState extends State<MyHomePage>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                    onPressed: () => sendmessage("You are my valentine!"),
-                    child: const Text("Message 1")),
-                const SizedBox(width: 20),
-                ElevatedButton(
-                    onPressed: () => sendmessage("XOXO!"),
-                    child: const Text("Message 2")),
-                const SizedBox(width: 20),
-              ],
-            ),
-            const SizedBox(height: 20),
+            // Heartbeat animation
             AnimatedBuilder(
               animation: _animation,
               builder: (context, child) {
@@ -111,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage>
                   child: child,
                 );
               },
-              child: Image.asset('assets/heartnew.png'),
+              child: Image.asset('assets/heartnew.png'), // Replace with your heart image
             ),
             const SizedBox(height: 20),
             Text(
@@ -130,15 +133,32 @@ class _MyHomePageState extends State<MyHomePage>
                 color: Colors.pink,
               ),
             ),
+            const SizedBox(height: 20),
+            // Commit message buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    onPressed: () => sendmessage("You are my valentine!"),
+                    child: const Text("Message 1")),
+                const SizedBox(width: 20),
+                ElevatedButton(
+                    onPressed: () => sendmessage("XOXO!"),
+                    child: const Text("Message 2")),
+              ],
+            ),
+            // Confetti widget
+            ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
+              emissionFrequency: 0.05,
+              numberOfParticles: 20,
+              gravity: 0.1,
+              blastDirection: 3.14, // Adjust this for direction
+            ),
           ],
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 }
